@@ -1,9 +1,70 @@
-<html>
-  <head>
-    <title>Raspberry Pi Live Video Feed</title>
-  </head>
-  <body>
-    <h1>Raspberry Pi Live Video Feed</h1>
-    <img id="bg" src="{{ url_for('video_feed') }}">
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Recorder</title>
+</head>
+<body>
+    <h1>Video Recorder</h1>
+    <video id="video" autoplay playsinline></video>
+    <br>
+    <button id="start">Start Recording</button>
+    <button id="stop" disabled>Stop Recording</button>
+    <a id="download" style="display:none;">Download Video</a>
+
+    <script>
+        const video = document.getElementById('video');
+        const startButton = document.getElementById('start');
+        const stopButton = document.getElementById('stop');
+        const downloadLink = document.getElementById('download');
+
+        let mediaRecorder;
+        let recordedChunks = [];
+
+        async function setupCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                return stream;
+            } catch (error) {
+                console.error('Error accessing the camera:', error);
+            }
+        }
+
+        async function startRecording() {
+            const stream = await setupCamera();
+            recordedChunks = [];
+            mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(recordedChunks, { type: 'video/mp4' });
+                const url = URL.createObjectURL(blob);
+                downloadLink.href = url;
+                downloadLink.download = 'recorded_video.mp4';
+                downloadLink.style.display = 'block';
+                downloadLink.textContent = 'Download Video';
+            };
+
+            mediaRecorder.start();
+            startButton.disabled = true;
+            stopButton.disabled = false;
+        }
+
+        function stopRecording() {
+            mediaRecorder.stop();
+            startButton.disabled = false;
+            stopButton.disabled = true;
+        }
+
+        startButton.addEventListener('click', startRecording);
+        stopButton.addEventListener('click', stopRecording);
+    </script>
+</body>
 </html>
