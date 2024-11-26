@@ -5,5 +5,31 @@
   <body>
     <h1>Raspberry Pi Live Video Feed</h1>
     <img id="bg" src="{{ url_for('video_feed') }}">
+
+
+    <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyCIqC9YrelIZILfHr7ZcGugjB6xCbPIBHI",
+    authDomain: "rpi-image-d9bb0.firebaseapp.com",
+    databaseURL: "https://rpi-image-d9bb0-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "rpi-image-d9bb0",
+    storageBucket: "rpi-image-d9bb0.firebasestorage.app",
+    messagingSenderId: "171361527944",
+    appId: "1:171361527944:web:c30d4271f2114eddaa173d",
+    measurementId: "G-WETXJLZHCE"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
   </body>
 </html>
